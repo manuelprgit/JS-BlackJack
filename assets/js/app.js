@@ -19,10 +19,24 @@ const createDeck = () => {
             deck.push(letter + type);
         }
     }
-    
-    deck = _.shuffle(deck)
 
+    deck = _.shuffle(deck)
     console.log(deck);
 }
 
 createDeck()
+
+const takeCard = () => {
+    if (deck.length === 0) throw 'No hay mas cartas';
+    return deck.pop();
+}
+
+const cardValue = (card) => {
+    const value = card.substring(0, card.length - 1)
+    return isNaN(value) 
+        ? value === 'A' ? 11 : 10
+        : points = Number(value);
+}
+
+console.log(cardValue(deck[0]))
+

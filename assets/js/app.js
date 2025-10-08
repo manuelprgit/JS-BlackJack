@@ -1,9 +1,9 @@
 const cartasJugador = document.getElementById('jugador-cartas'),
-      cartasMaquina = document.getElementById('computador-cartas'),
-      getCard = document.getElementById('getCard'),
-      playerPointsContent = document.getElementById('playerPointsContent'),
-      pcPointsContent = document.getElementById('pcPointsContent'),
-      stopGame = document.getElementById('stopGame');
+    cartasMaquina = document.getElementById('computador-cartas'),
+    getCard = document.getElementById('getCard'),
+    playerPointsContent = document.getElementById('playerPointsContent'),
+    pcPointsContent = document.getElementById('pcPointsContent'),
+    stopGame = document.getElementById('stopGame');
 
 
 let deck = [];
@@ -28,19 +28,20 @@ const createDeck = () => {
         }
     }
 
-    deck = _.shuffle(deck); 
+    deck = _.shuffle(deck);
+    console.log(deck);
 }
 
 createDeck()
 
-const takeCard = () => {
+const takeACard = () => {
     if (deck.length === 0) throw 'No hay mas cartas';
     return deck.pop();
 }
 
 const cardValue = (card) => {
     const value = card.substring(0, card.length - 1)
-    return isNaN(value) 
+    return isNaN(value)
         ? value === 'A' ? 11 : 10
         : Number(value);
 }
@@ -52,39 +53,72 @@ const createCard = (card, cardContainer) => {
     cardContainer.append(imgCard);
 }
 
-const PCTurn = (minPoints) => {
-    do{ 
-        const card = takeCard();
+const PCTurn = () => {
+    do {
+        const card = takeACard();
         const value = cardValue(card);
         createCard(card, cartasMaquina);
         pcPoints += value;
         pcPointsContent.textContent = pcPoints;
-        if(minPoints > 21) break;
+        if (playerPoints > 21) break;
     }
-    while(pcPoints < minPoints && pcPoints < 21);
+    while (pcPoints <= playerPoints && pcPoints < 21);
+    if (pcPoints <= 21 && pcPoints > playerPoints) {
+        setTimeout(() => {
+            alert('La computadora ganó!')
+        }, 100);
+    } else if (pcPoints > 21) {
+        setTimeout(() => {
+            alert('Jugador gana!')
+        }, 100);
+    }
 }
 
-getCard.addEventListener('click', e=> {
-    const card = takeCard()
+const resetGame = () => {
+    deck = [];
+    createDeck();
+    cartasJugador.textContent = '';
+    cartasMaquina.textContent = '';
+    playerPointsContent.textContent = '0';
+    pcPointsContent.textContent = '0';
+    getCard.disabled = false;
+    stopGame.disabled = false;
+    playerPoints = 0;
+    pcPoints = 0;
+}
+
+getCard.addEventListener('click', e => {
+    const card = takeACard()
     const value = cardValue(card);
     playerPoints += value;
     playerPointsContent.textContent = playerPoints;
     createCard(card, cartasJugador);
 
-    if(playerPoints > 21){
-        console.warn('Perdiste');
+    if (playerPoints > 21) {
         getCard.disabled = true;
-        PCTurn(playerPoints)
-    }else if(playerPoints === 21){
-        console.warn('21, Genial!')
+        PCTurn(playerPoints);
+        setTimeout(() => {
+            alert('Perdiste');
+        }, 100);
+    } else if (playerPoints === 21) {
         getCard.disabled = true;
         stopGame.disabled = true;
+        setTimeout(() => {
+            alert('21, Genial!');
+        }, 100);
+    } else if (pcPoints === playerPoints) {
+        setTimeout(() => {
+            alert('Nadie gana');
+        }, 100);
     }
 })
 
-stopGame.addEventListener('click', e=>{
+stopGame.addEventListener('click', e => {
     getCard.disabled = true;
     stopGame.disabled = true;
     PCTurn(playerPoints);
 })
 
+newGame.addEventListener('click', e => {
+    resetGame();
+})

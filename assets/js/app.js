@@ -1,21 +1,25 @@
 (async () => {
     // 'use strict';
-    const cartasJugador = document.getElementById('jugador-cartas'),
-        cartasMaquina = document.getElementById('computador-cartas'),
-        getCard = document.getElementById('getCard'),
-        playerPointsContent = document.getElementById('playerPointsContent'),
-        pcPointsContent = document.getElementById('pcPointsContent'),
-        stopGame = document.getElementById('stopGame');
-    
-    
+    const cartasJugador       = document.getElementById('jugador-cartas'),
+          cartasMaquina       = document.getElementById('computador-cartas'),
+          getCard             = document.getElementById('getCard'),
+          playerPointsContent = document.getElementById('playerPointsContent'),
+          pcPointsContent     = document.getElementById('pcPointsContent'),
+          stopGame            = document.getElementById('stopGame');
+        
     let deck = [];
-    // deck = 1;
+    const playersPoints = [];
     
-    let playerPoints = 0;
-    let pcPoints = 0;
-    
-    const types = ['C', 'D', 'H', 'S'];
-    const letters = ['A', 'J', 'Q', 'K'];
+    const types = ['C', 'D', 'H', 'S'],
+          letters = ['A', 'J', 'Q', 'K'];
+
+    const initGame = (players = 2) => {
+        deck = createDeck();
+        for(let i = 0; i < players; i++){
+            playersPoints.push(0)
+        }
+        console.log({playersPoints})
+    }
     
     const createDeck = () => {
         for (let i = 2; i <= 10; i++) {
@@ -31,11 +35,8 @@
             }
         }
     
-        deck = _.shuffle(deck);
-        console.log(deck);
+        return _.shuffle(deck);        
     }
-    
-    createDeck()
     
     const takeACard = () => {
         if (deck.length === 0) throw 'No hay mas cartas';
@@ -125,5 +126,5 @@
     newGame.addEventListener('click', e => {
         resetGame();
     })
-    
+    initGame()
 })();

@@ -18,6 +18,7 @@
         for (let i = 0; i < players; i++) {
             playersPoints.push(0)
         }
+        playersCardContent.forEach(item => item.textContent = '');
     }
 
     const createDeck = () => {
@@ -67,38 +68,42 @@
         const pCTurnNumber = playersPoints.length - 1;
         do {
             const card = takeACard();
-
             pcPoints = accumulatePoints(card, pCTurnNumber);
-            
-            console.log(minPoints);
-
-            createCard(card, pCTurnNumber);
-            
+            createCard(card, pCTurnNumber);            
             if (minPoints > 21) break;
         }
         while (pcPoints <= minPoints && pcPoints < 21);
-        if (pcPoints <= 21 && pcPoints > minPoints) {
-            setTimeout(() => {
-                alert('La computadora ganó!')
-            }, 100);
-        } else if (pcPoints > 21) {
-            setTimeout(() => {
-                alert('Jugador gana!')
-            }, 100);
-        }
+        whoIsTheWinner();
     }
 
     const resetGame = () => {
         deck = [];
-        deck = createDeck();
-        // cartasJugador.textContent = '';
-        // cartasMaquina.textContent = '';
+        deck = createDeck(); 
         playerPointsContent.textContent = '0';
         pcPointsContent.textContent = '0';
         getCard.disabled = false;
         stopGame.disabled = false;
-        playerPoints = 0;
-        pcPoints = 0;
+    }
+
+    const whoIsTheWinner = () => {
+
+        const [minPoints, pcPoints] = playersPoints;
+        
+        setTimeout(() => {
+            if(pcPoints === minPoints){
+                alert('Nadie gana');
+            }
+            else if(minPoints > 21){
+                alert('Nadie gana');
+            }
+            else if(pcPoints > 21){
+                alert('Jugador gana');
+            }
+            else{
+                alert('Computadora gana')
+            }
+        }, 100);
+
     }
 
     getCard.addEventListener('click', e => {
@@ -119,11 +124,12 @@
             setTimeout(() => {
                 alert('21, Genial!');
             }, 100);
-        } else if (pcPoints === playerPoints) {
-            setTimeout(() => {
-                alert('Nadie gana');
-            }, 100);
-        }
+        } 
+        // else if (pcPoints === playerPoints) {
+        //     setTimeout(() => {
+        //         alert('Nadie gana');
+        //     }, 100);
+        // }
     })
 
     stopGame.addEventListener('click', e => {
@@ -133,7 +139,7 @@
     })
 
     newGame.addEventListener('click', e => {
-        resetGame();
+        resetGame();        
     })
     initGame()
 })();
